@@ -7,36 +7,36 @@ import sys
 # --------
 # Parameters / 設定のための変数
 
-# 感水紙の実際の寸法 (mm x mm)
+# Area of paper
 PAPER_AREA = 52.0 * 76.0
 
-# グラフの横軸の刻み幅
-AREA_STEP = 0.02    # 面積のグラフの刻み幅（mm^2）
-DIAMETER_STEP = 0.05    # 直径のグラフの刻み幅（mm）
+# Histogram intervals
+AREA_STEP = 0.02    # Interval for the "Area" histogram
+DIAMETER_STEP = 0.05    # Interval for the "Equivalent" histogram
 
-# 粒の認識のしやすさ（整数値）
-# デフォルトは0。紙のザラザラ度とかに応じて調整するといいかも
-# 正[負]の値にすると認識しやすく[しにくく]なる（基準が緩く[厳しく]なる）
-# 最大でも -20 ~ 7 くらいの範囲に収めるのがおすすめ
-THRESH_LEVEL = 0
+# Parameter for cv2.AdaptiveThreshold
+# Lower value = Higher sensitivity
+THRESH_LEVEL = 13
 
-# 粒の最小サイズ
-# 相当直径がこれより小さい点は、認識しても無視
-# ザラザラとかを排除するため
+# Minimum particle size
+# Ignores results with an equivalent diameter smaller than this value
 MINIMUM_DIAMETER = 0.050
 
-# ゴミがある領域を除外するかどうか
-# False にすると最初にマウスで領域を選ぶ操作が無くなる。除外したい領域がある場合は True
+# Option to select regions to ignore
 SELECT_REGION = False
 
 # 丸っぽさ（compactness）を見るかどうか
 # True なら、丸っぽい点のみを数える。False にすると形を気にしなくなる
 # 基本的には、変更しなくて良いはず
+
+# Whether to check the compactness of results
+# (Compactness is an indicator of how "circular" a geometrical shape is)
+# if True, ignores results with a compactness smaller than a certain value
 ENABLE_COMPACTNESS = True
 
 
 # --------
-# 以下、プログラム。書き換えないで！
+# Program Code
 # --------
 args = sys.argv
 directory = "images/"
@@ -82,8 +82,6 @@ if SELECT_REGION:
 
     cv2.destroyAllWindows()
 
-# print(on_click)
-# print(off_click)
 
 # --------
 # Extract paper region / 紙の領域を抽出
@@ -132,11 +130,9 @@ img_hist = copy.deepcopy(img_gray)
 img_hist[np.where(paper != 255)] = 0
 
 # To binary image / 画像の二値化
-# THRESHOLD = mean_intensity - 50
-# ret, th = cv2.threshold(img_gray, THRESHOLD, 255, cv2.THRESH_BINARY_INV)
 img_adpt = copy.deepcopy(img_gray)
 img_adpt[np.where(paper != 255)] = mean_intensity
-th = cv2.adaptiveThreshold(img_gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 21, 13 - THRESH_LEVEL)
+th = cv2.adaptiveThreshold(img_gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 21, THRESH_LEVEL)
 # ret, th = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
 # Fill holes in particles / 粒を単色に埋める
@@ -248,15 +244,4 @@ ax1.bar(area_graph_x, area_hist, AREA_STEP*0.8)
 ax2.set_title('Histogram of Equivalent Diameters')
 ax2.bar(diam_graph_x, diam_hist, DIAMETER_STEP*0.8)
 
-# fig = plt.figure(figsize=(15,6))
-# plt.subplot(1,2,1)
-# plt.title("Areas")
-# plt.hist(Areas, bins=30)
-# plt.subplot(1,2,2)
-# plt.title("Equivalent Diameter")
-# plt.hist(Eq_diameters, bins=30)
-# plt.subplot(1,3,3)
-# plt.title("Histogram of Grayscale Image")
-# plt.hist(img_hist.ravel(), bins=255, range=(1,256))
-# plt.axvline(mean_intensity, color='k', linestyle='dashed', linewidth=2)
 plt.show()
