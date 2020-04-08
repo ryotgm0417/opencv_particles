@@ -14,4 +14,4 @@ Latest version of Python and OpenCV
 
 ## Usage
 1. Create a directory named "images" containing the image files (.jpg) to be analyzed.
-2. `python3 particle.py [file-name]`
+2. Execute program: `python3 particle.py [file-name]`
