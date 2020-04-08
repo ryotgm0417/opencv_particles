@@ -34,6 +34,15 @@ SELECT_REGION = False
 # if True, ignores results with a compactness smaller than a certain value
 ENABLE_COMPACTNESS = True
 
+# HSV filter parameters
+low_H = 0
+low_S = 70
+low_V = 100
+high_H = 100
+high_S = 255
+high_V = 255
+
+
 
 # --------
 # Program Code
@@ -85,13 +94,6 @@ if SELECT_REGION:
 
 # --------
 # Extract paper region / 紙の領域を抽出
-low_H = 0
-low_S = 70
-low_V = 100
-high_H = 100
-high_S = 255
-high_V = 255
-
 img_hsv = cv2.cvtColor(img_raw, cv2.COLOR_BGR2HSV)
 th_hsv = cv2.inRange(img_hsv, (low_H, low_S, low_V), (high_H, high_S, high_V))
 
