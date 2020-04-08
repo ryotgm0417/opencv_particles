@@ -7,7 +7,11 @@ This program was made with the intention of counting the number of small waterdr
 Water-Sensitive Paper (感水試験紙). The color of the paper is originally yellow, but turns dark-blue
 when it comes in contact with water/moisture. <br>
 
-It can be applied to other uses of image-based particle analysis by adjusting the parameters accordingly.
+It can be applied to other uses of image-based particle analysis by adjusting the parameters accordingly. 
+
+## Features
+- Counts the total number of particles within the field of interest.
+- Outputs two histograms that categorize particles based on their area and equivalent diameter, respectively.
 
 ## Requirements
 Latest version of Python and OpenCV
