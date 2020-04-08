@@ -7,7 +7,7 @@ import sys
 # --------
 # Parameters / 設定のための変数
 
-# Area of paper
+# Area of paper (i.e. field of view / area of interest)
 PAPER_AREA = 52.0 * 76.0
 
 # Histogram intervals
